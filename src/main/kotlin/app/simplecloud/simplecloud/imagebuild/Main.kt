@@ -20,16 +20,36 @@ package app.simplecloud.simplecloud.imagebuild
 
 import app.simplecloud.simplecloud.imagebuild.config.BuildConfig
 import app.simplecloud.simplecloud.imagebuild.config.BuildConfigWrapperImpl
+import app.simplecloud.simplecloud.imagebuild.utils.Downloader
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 import java.io.File
+import java.net.MalformedURLException
+import java.net.URL
 
 fun main() {
     val yaml = Yaml(Constructor(BuildConfig::class.java))
-    val filePath = System.getenv("BUILD_CONFIG_PATH")
-    val yamlFile = File(filePath).readText()
-    val buildConfig: BuildConfig = yaml.load(yamlFile)
+    val buildConfigPath = System.getenv("BUILD_CONFIG")
+    val yamlFile = if (isValidUrl(buildConfigPath)) {
+        val tmpFile = File("tmp/buildconfig.yaml")
+        Downloader.userAgentDownload(buildConfigPath, tmpFile)
+        tmpFile
+    } else {
+        File(buildConfigPath)
+    }
+
+    val yamlFileContent = yamlFile.readText()
+    val buildConfig: BuildConfig = yaml.load(yamlFileContent)
     val wrapper = BuildConfigWrapperImpl(buildConfig)
 
     ImageBuilder(wrapper, System.getenv("BUILDKIT_ADDR")!!, System.getenv("REGISTRY")).buildImages()
+}
+
+private fun isValidUrl(url: String): Boolean {
+    return try {
+        URL(url)
+        true
+    } catch (e: MalformedURLException) {
+        false
+    }
 }
