@@ -21,6 +21,7 @@ package app.simplecloud.simplecloud.imagebuild
 import app.simplecloud.simplecloud.imagebuild.config.BuildConfig
 import app.simplecloud.simplecloud.imagebuild.config.BuildConfigWrapperImpl
 import app.simplecloud.simplecloud.imagebuild.utils.Downloader
+import eu.thesimplecloud.jsonlib.JsonLib
 import org.yaml.snakeyaml.LoaderOptions
 import org.yaml.snakeyaml.Yaml
 import java.io.File
@@ -39,7 +40,8 @@ fun main() {
     }
 
     val yamlFileContent = yamlFile.readText()
-    val buildConfig: BuildConfig = yaml.load(yamlFileContent)
+    val buildConfigMap: Map<Any, Any> = yaml.load(yamlFileContent)
+    val buildConfig = JsonLib.fromObject(buildConfigMap).getObject(BuildConfig::class.java)
     val wrapper = BuildConfigWrapperImpl(buildConfig)
 
     ImageBuilder(wrapper, System.getenv("BUILDKIT_ADDR")!!, System.getenv("REGISTRY")).buildImages()

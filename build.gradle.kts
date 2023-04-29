@@ -34,6 +34,7 @@ dependencies {
     testImplementation(kotlin("test"))
     implementation("org.yaml:snakeyaml:2.0")
     implementation("commons-io:commons-io:2.11.0")
+    implementation("eu.thesimplecloud.jsonlib:json-lib:1.0.8")
 
 }
 
