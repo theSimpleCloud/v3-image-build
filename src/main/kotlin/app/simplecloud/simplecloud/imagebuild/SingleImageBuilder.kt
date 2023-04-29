@@ -89,12 +89,12 @@ class SingleImageBuilder(
             .filter { it.load == LoadPhase.STARTUP }
         val formattedPlugins = onStartupPlugins.joinToString("|") { it.url }
 
-        dockerfileFile.appendText("FROM $nextFromImage")
-        dockerfileFile.appendText("COPY executable_dir/ /img/")
-        dockerfileFile.appendText("COPY start.sh /start.sh")
-        dockerfileFile.appendText("RUN chmod +x start.sh")
-        dockerfileFile.appendText("EXPOSE 25565")
-        dockerfileFile.appendText("CMD [\"/start.sh\", \"java|-Dcom.mojang.eula.agree=true|-jar|server.jar\", \"$formattedPlugins\"]\"")
+        dockerfileFile.appendText("FROM $nextFromImage\n")
+        dockerfileFile.appendText("COPY executable_dir/ /img/\n")
+        dockerfileFile.appendText("COPY start.sh /start.sh\n")
+        dockerfileFile.appendText("RUN chmod +x start.sh\n")
+        dockerfileFile.appendText("EXPOSE 25565\n")
+        dockerfileFile.appendText("CMD [\"/start.sh\", \"java|-Dcom.mojang.eula.agree=true|-jar|server.jar\", \"$formattedPlugins\"]\"\n")
 
         val processConfigurator = determineProcessConfigurator()
         processConfigurator.configure(finalDir, this.orderedTemplates.map { File(TEMPLATE_DIR, it.name) })
@@ -116,8 +116,8 @@ class SingleImageBuilder(
 
         template.downloadFiles.filter { it.load == LoadPhase.BUILD }
             .forEach { Downloader.userAgentDownload(it.url, File(tmpTemplateDir, it.path)) }
-        dockerfileFile.appendText("FROM $nextFromImage AS ${template.name}")
-        dockerfileFile.appendText("COPY ${template.name}/ /img/")
+        dockerfileFile.appendText("FROM $nextFromImage AS ${template.name}\n")
+        dockerfileFile.appendText("COPY ${template.name}/ /img/\n")
         this.nextFromImage = template.name
     }
 
