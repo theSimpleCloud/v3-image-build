@@ -42,7 +42,7 @@ interface ProcessConfigurator {
         }
 
         if (!tmpFile.exists())
-            FileCopier.copyFileOutOfJar(tmpFile, "/${name}")
+            FileCopier.copyFileOutOfJar(tmpFile, name)
     }
 
 }
