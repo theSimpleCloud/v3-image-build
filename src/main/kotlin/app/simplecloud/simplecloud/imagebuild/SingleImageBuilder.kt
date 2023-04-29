@@ -28,7 +28,9 @@ import app.simplecloud.simplecloud.imagebuild.configurator.VelocityProcessConfig
 import app.simplecloud.simplecloud.imagebuild.utils.Downloader
 import app.simplecloud.simplecloud.imagebuild.utils.FileCopier
 import org.apache.commons.io.FileUtils
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStreamReader
 
 /**
  * Date: 18.04.23
@@ -59,7 +61,14 @@ class SingleImageBuilder(
 
     private fun buildImage() {
         val command = "buildctl --addr tcp://${this.remoteBuildKitAddr}:1234 build --frontend=dockerfile.v0 --local context=${TMP_DIR} --local dockerfile=${TMP_DIR} --output type=image,name=${this.destImageTag},push=true,registry.insecure=true"
-        Runtime.getRuntime().exec(command).waitFor()
+        val process = Runtime.getRuntime().exec(command)
+        val inputReader = BufferedReader(InputStreamReader(process.inputStream))
+        inputReader.use {
+            it.lines().forEach { line ->
+                println(line)
+            }
+        }
+        process.waitFor()
     }
 
     private fun prepareDirectory() {

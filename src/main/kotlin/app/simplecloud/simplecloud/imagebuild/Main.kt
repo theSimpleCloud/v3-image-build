@@ -43,8 +43,16 @@ fun main() {
     val buildConfigMap: Map<Any, Any> = yaml.load(yamlFileContent)
     val buildConfig = JsonLib.fromObject(buildConfigMap).getObject(BuildConfig::class.java)
     val wrapper = BuildConfigWrapperImpl(buildConfig)
+    val buildKitAddr = System.getenv("BUILDKIT_ADDR")!!
+    val registry = System.getenv("REGISTRY")
 
-    ImageBuilder(wrapper, System.getenv("BUILDKIT_ADDR")!!, System.getenv("REGISTRY")).buildImages()
+    println("Building Images")
+    println(yamlFileContent)
+    println("Registry: $registry")
+    println("BuildKitAddr: $buildKitAddr")
+
+
+    ImageBuilder(wrapper, buildKitAddr, registry).buildImages()
 }
 
 private fun isValidUrl(url: String): Boolean {
