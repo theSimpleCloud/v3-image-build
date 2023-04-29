@@ -27,11 +27,12 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven("https://repo.thesimplecloud.eu/artifactory/list/gradle-release-local/")
 }
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation("org.yaml:snakeyaml:1.33")
+    implementation("org.yaml:snakeyaml:2.0")
     implementation("commons-io:commons-io:2.11.0")
 
 }

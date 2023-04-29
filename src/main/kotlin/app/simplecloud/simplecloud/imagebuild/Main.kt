@@ -21,14 +21,14 @@ package app.simplecloud.simplecloud.imagebuild
 import app.simplecloud.simplecloud.imagebuild.config.BuildConfig
 import app.simplecloud.simplecloud.imagebuild.config.BuildConfigWrapperImpl
 import app.simplecloud.simplecloud.imagebuild.utils.Downloader
+import org.yaml.snakeyaml.LoaderOptions
 import org.yaml.snakeyaml.Yaml
-import org.yaml.snakeyaml.constructor.Constructor
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
 
 fun main() {
-    val yaml = Yaml(Constructor(BuildConfig::class.java))
+    val yaml = Yaml(LoaderOptions())
     val buildConfigPath = System.getenv("BUILD_CONFIG")
     val yamlFile = if (isValidUrl(buildConfigPath)) {
         val tmpFile = File("tmp/buildconfig.yaml")
