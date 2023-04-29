@@ -61,7 +61,7 @@ class SingleImageBuilder(
 
     private fun buildImage() {
         val command = "buildctl --addr tcp://${this.remoteBuildKitAddr}:1234 build --frontend=dockerfile.v0 --local context=${TMP_DIR} --local dockerfile=${TMP_DIR} --output type=image,name=${this.destImageTag},push=true,registry.insecure=true"
-        val process = Runtime.getRuntime().exec(command)
+        val process = ProcessBuilder(command.split(" ")).redirectErrorStream(true).start()
         val inputReader = BufferedReader(InputStreamReader(process.inputStream))
         inputReader.use {
             it.lines().forEach { line ->
