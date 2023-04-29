@@ -116,9 +116,9 @@ class SingleImageBuilder(
 
         template.downloadFiles.filter { it.load == LoadPhase.BUILD }
             .forEach { Downloader.userAgentDownload(it.url, File(tmpTemplateDir, it.path)) }
-        dockerfileFile.appendText("FROM $nextFromImage AS ${template.name}\n")
+        dockerfileFile.appendText("FROM $nextFromImage AS ${template.name.lowercase()}\n")
         dockerfileFile.appendText("COPY ${template.name}/ /img/\n")
-        this.nextFromImage = template.name
+        this.nextFromImage = template.name.lowercase()
     }
 
 
